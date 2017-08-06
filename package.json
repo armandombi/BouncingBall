@@ -1,0 +1,31 @@
+{
+  "name": "bouncing_balls",
+  "version": "1.0.0",
+  "description": "A javascript simulation of my bouncing balls",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "start": "node_modules/.bin/webpack-dev-server"
+  },
+  "keywords": [
+    "javascript",
+    "physics",
+    "bouncing",
+    "ball"
+  ],
+  "author": "Armando Bracho",
+  "license": "MIT",
+  "devDependencies": {
+    "awesome-typescript-loader": "^3.2.2",
+    "css-loader": "^0.28.4",
+    "source-map-loader": "^0.2.1",
+    "style-loader": "^0.18.2",
+    "typescript": "^2.4.2",
+    "webpack": "^3.4.1",
+    "webpack-dev-server": "^2.6.1"
+  },
+  "dependencies": {
+    "lodas": "^1.2.0"
+  }
+}
