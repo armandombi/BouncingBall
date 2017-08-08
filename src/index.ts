@@ -1,5 +1,7 @@
+import Canvas from './canvas.js';
+
 function start() {
-  var canvas: HTMLCanvasElement,
+  var canvas = new Canvas(<HTMLCanvasElement>document.getElementById("myCanvas")),
     ctx: CanvasRenderingContext2D,
     cx = 100,
     cy = 100,
@@ -10,21 +12,20 @@ function start() {
     damping = 0.9,
     traction = 0.8,
     paused = false;
-  ;
 
   function init() {
-
-    canvas = <HTMLCanvasElement>document.getElementById("myCanvas");
-    ctx = canvas.getContext("2d");
-
-    canvas.width = 300;
-    canvas.height = 150;
+    
+    //canvas = <HTMLCanvasElement>document.getElementById("myCanvas");
+    //ctx = canvas.getContext("2d");
+    canvas.resizeCanvas();
+    //canvas.width = 300;
+    //canvas.height = 150;
 
     circle();
   }
 
   function circle() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.setWidth(width), canvas.height);
     if (!paused)
       requestAnimationFrame(circle);
 
