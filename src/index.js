@@ -1,24 +1,18 @@
 import Canvas from './canvas.js';
+import Ball from './ball.js';
 
 function start() {
-  var canvas = new Canvas(document.getElementById("myCanvas")),
-  paused = false;
+  
+  var balls = [];
+  var ball = new Ball(100,100)
+  balls.push(ball);
+  ball = new Ball(650,650);
+  balls.push(ball);
 
-
-
-  //canvas = <HTMLCanvasElement>document.getElementById("myCanvas");
-  //ctx = canvas.getContext("2d");
+  var canvas = new Canvas(document.getElementById("myCanvas"),balls);
   canvas.resizeCanvas();
-  //canvas.width = 300;
-  //canvas.height = 150;
-
-  canvas.circle(paused);
-
-
-  canvas.canvasElement.addEventListener('mousedown', ev => this.handleMouseDown(ev));
-  canvas.canvasElement.addEventListener('mouseup', ev => this.handleMouseUp(ev));
-
-
+  canvas.circle();
+  
 }
 
 window.onload = start;

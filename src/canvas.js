@@ -1,75 +1,84 @@
 
 class Canvas {
-    constructor(canvasElement) {
+    constructor(canvasElement, balls) {
         this.canvasElement = canvasElement;
         this.context = canvasElement.getContext('2d');
-        //this.width = 100;
-        //this.height = 100;
+
+        this.canvasElement.addEventListener('mousedown', this.handleMouseDown.bind(this));
+        this.canvasElement.addEventListener('mouseup', this.handleMouseUp.bind(this));
+
+        this.vx = 2;
+        this.vy = 5;
+        this.radius = 5,
+            this.gravity = 0.2,
+            this.damping = 0.9,
+            this.traction = 0.8;
+        this.paused = false;
+        this.balls = balls;
     }
-   
+
     resizeCanvas() {
-        window.addEventListener('resize', resizeE, false);
+        window.addEventListener('resize', resizeE.bind(this), false);
 
         function resizeE() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            this.canvasElement.width = window.innerWidth;
+            this.canvasElement.height = window.innerHeight;
         }
     }
 
-    circle(paused) {
-        var cx = 100,
-            cy = 100,
-            vx = 2,
-            vy = 5,
-            radius = 5,
-            gravity = 0.2,
-            damping = 0.9,
-            traction = 0.8;
+    circle() {
+        for (var i = 0; i < this.balls.length; i++) {
+            this.context.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
 
-        this.context.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
-        if (!paused)
-            requestAnimationFrame(this.circle);
+            if (this.balls[i].cx + this.radius >= this.canvasElement.width) {
+                this.vx = -this.vx * this.damping;
+                this.balls[i].cx = this.canvasElement.width - this.radius;
+            } else if (this.balls[i].cx - this.radius <= 0) {
+                this.vx = -this.vx * this.damping;
+                this.balls[i].cx = this.radius;
+            }
+            if (this.balls[i].cy + this.radius >= this.canvasElement.height) {
+                this.vy = -this.vy * this.damping;
+                this.balls[i].cy = this.canvasElement.height - this.radius;
 
-        if (cx + radius >= this.canvasElement.width) {
-            vx = -vx * damping;
-            cx = canvas.width - radius;
-        } else if (cx - radius <= 0) {
-            vx = -vx * damping;
-            cx = radius;
-        }
-        if (cy + radius >= this.canvasElement.height) {
-            vy = -vy * damping;
-            cy = canvasElement.height - radius;
+                this.vx *= this.traction;
+            } else if (this.cy - this.radius <= 0) {
+                this.vy = -this.vy * this.damping;
+                this.balls[i].cy = this.radius;
+            }
+
+            this.vy += this.gravity;
+
+            this.balls[i].cx += this.vx;
+            this.balls[i].cy += this.vy;
+
+            this.context.beginPath();
             
-            vx *= traction;
-        } else if (cy - radius <= 0) {
-            vy = -vy * damping;
-            cy = radius;
+            if(i == 0){
+                this.context.fillStyle = 'red';
+                this.context.arc(this.balls[i].cx, this.balls[i].cy, this.radius+20, 0, 2 * Math.PI, false);
+            }else{
+                this.context.fillStyle = 'green';
+                this.context.arc(this.balls[i].cx, this.balls[i].cy, this.radius, 0, 2 * Math.PI, false);
+            }
+            this.context.fill();
         }
-
-        vy += gravity; 
-
-        cx += vx;
-        cy += vy;
-
-        this.context.beginPath();
-        this.context.arc(cx, cy, radius, 0, 2 * Math.PI, false);
-        this.context.fillStyle = 'green';
-        this.context.fill();
+        if (!this.paused)
+                requestAnimationFrame(this.circle.bind(this));
     }
 
     handleMouseDown(e) {
-        cx = e.pageX - canvas.offsetLeft;
-        cy = e.pageY - canvas.offsetTop;
-        vx = vy = 0;
-        paused = true;
+        this.cx = e.pageX - this.canvasElement.offsetLeft;
+        this.cy = e.pageY - this.canvasElement.offsetTop;
+        this.vx = this.vy = 0;
+        this.paused = true;
     }
 
     handleMouseUp(e) {
-        vx = e.pageX - canvas.offsetLeft - cx;
-        vy = e.pageY - canvas.offsetTop - cy;
-        paused = false;
-        circle(paused);
+        this.vx = e.pageX - this.canvasElement.offsetLeft - this.cx;
+        this.vy = e.pageY - this.canvasElement.offsetTop - this.cy;
+        this.paused = false;
+        this.circle(this.paused);
     }
 
 }
