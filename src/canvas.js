@@ -27,9 +27,8 @@ class Canvas {
     }
 
     circle() {
+        this.context.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
         for (var i = 0; i < this.balls.length; i++) {
-            this.context.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
-
             if (this.balls[i].cx + this.radius >= this.canvasElement.width) {
                 this.vx = -this.vx * this.damping;
                 this.balls[i].cx = this.canvasElement.width - this.radius;
@@ -53,14 +52,8 @@ class Canvas {
             this.balls[i].cy += this.vy;
 
             this.context.beginPath();
-            
-            if(i == 0){
-                this.context.fillStyle = 'red';
-                this.context.arc(this.balls[i].cx, this.balls[i].cy, this.radius+20, 0, 2 * Math.PI, false);
-            }else{
-                this.context.fillStyle = 'green';
-                this.context.arc(this.balls[i].cx, this.balls[i].cy, this.radius, 0, 2 * Math.PI, false);
-            }
+            this.context.fillStyle = 'red';
+            this.context.arc(this.balls[i].cx, this.balls[i].cy, this.radius, 0, 2 * Math.PI, false);
             this.context.fill();
         }
         if (!this.paused)
