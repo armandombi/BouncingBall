@@ -1,78 +1,110 @@
+import Ball from './ball.js';
+import Physics from './physics.js';
 
 class Canvas {
     constructor(canvasElement, balls) {
         this.canvasElement = canvasElement;
         this.context = canvasElement.getContext('2d');
+        this.initializeEventListeners();
+        this.gravity = 0.2;
+        this.paused = false;
+        this.balls = [];
+    }
 
+    initializeEventListeners() {
         this.canvasElement.addEventListener('mousedown', this.handleMouseDown.bind(this));
         this.canvasElement.addEventListener('mouseup', this.handleMouseUp.bind(this));
-
-        this.vx = 2;
-        this.vy = 5;
-        this.radius = 5,
-            this.gravity = 0.2,
-            this.damping = 0.9,
-            this.traction = 0.8;
-        this.paused = false;
-        this.balls = balls;
+        this.canvasElement.addEventListener('mousemove', this.handleMouseMove.bind(this));
+        window.addEventListener('resize', this.resizeCanvas.bind(this), false);
     }
 
     resizeCanvas() {
-        window.addEventListener('resize', resizeE.bind(this), false);
-
-        function resizeE() {
-            this.canvasElement.width = window.innerWidth;
-            this.canvasElement.height = window.innerHeight;
-        }
+        this.canvasElement.width = window.innerWidth;
+        this.canvasElement.height = window.innerHeight;
     }
 
     circle() {
         this.context.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
+        this.balls.unshift(this.balls.shift().checkCollision(this.balls));
         for (var i = 0; i < this.balls.length; i++) {
-            if (this.balls[i].cx + this.radius >= this.canvasElement.width) {
-                this.vx = -this.vx * this.damping;
-                this.balls[i].cx = this.canvasElement.width - this.radius;
-            } else if (this.balls[i].cx - this.radius <= 0) {
-                this.vx = -this.vx * this.damping;
-                this.balls[i].cx = this.radius;
+            var ball = this.balls[i];
+            if (ball.posx + ball.radius >= this.canvasElement.width) {
+                ball.velx = -ball.velx * ball.damping;
+                ball.posx = this.canvasElement.width - ball.radius;
+            } else if (ball.posx - ball.radius <= 0) {
+                ball.velx = -ball.velx * ball.damping;
+                ball.posx = ball.radius;
             }
-            if (this.balls[i].cy + this.radius >= this.canvasElement.height) {
-                this.vy = -this.vy * this.damping;
-                this.balls[i].cy = this.canvasElement.height - this.radius;
+            if (ball.posy + ball.radius >= this.canvasElement.height) {
+                ball.vely = -ball.vely * ball.damping;
+                ball.posy = this.canvasElement.height - ball.radius;
 
-                this.vx *= this.traction;
-            } else if (this.cy - this.radius <= 0) {
-                this.vy = -this.vy * this.damping;
-                this.balls[i].cy = this.radius;
+                ball.velx *= ball.traction;
+            } else if (ball.posy - ball.radius <= 0) {
+                ball.vely = -ball.vely * ball.damping;
+                ball.posy = ball.radius;
             }
 
-            this.vy += this.gravity;
+            ball.vely += this.gravity;
 
-            this.balls[i].cx += this.vx;
-            this.balls[i].cy += this.vy;
+            ball.posx += ball.velx;
+            ball.posy += ball.vely;
 
             this.context.beginPath();
-            this.context.fillStyle = 'red';
-            this.context.arc(this.balls[i].cx, this.balls[i].cy, this.radius, 0, 2 * Math.PI, false);
+
+            this.context.fillStyle = this.getRandomColor();
+            this.context.arc(ball.posx, ball.posy, ball.radius, 0, 2 * Math.PI, false);
             this.context.fill();
         }
         if (!this.paused)
-                requestAnimationFrame(this.circle.bind(this));
+            requestAnimationFrame(this.circle.bind(this));
+
+    }
+
+    getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    getCurrentPosition(e) {
+        return {
+            x: e.pageX - this.canvasElement.offsetLeft,
+            y: e.pageY - this.canvasElement.offsetTop
+        }
+    }
+
+    handleMouseMove(e) {
+        this.flag = 1;
     }
 
     handleMouseDown(e) {
-        this.cx = e.pageX - this.canvasElement.offsetLeft;
-        this.cy = e.pageY - this.canvasElement.offsetTop;
-        this.vx = this.vy = 0;
+        this.flag = 0;
+        var pos = this.getCurrentPosition(e);
+        var ball = new Ball(pos.x, pos.y);
+
+        //this.posx = e.pageX - this.canvasElement.offsetLeft;
+        //this.posy = e.pageY - this.canvasElement.offsetTop;
+        ball.velx = ball.vely = 0;
+        this.balls.push(ball);
         this.paused = true;
     }
 
     handleMouseUp(e) {
-        this.vx = e.pageX - this.canvasElement.offsetLeft - this.cx;
-        this.vy = e.pageY - this.canvasElement.offsetTop - this.cy;
+        if (this.flag == 1) {
+            var ball = this.balls.pop();
+            ball.velx = e.pageX - this.canvasElement.offsetLeft - ball.posx;
+            ball.vely = e.pageY - this.canvasElement.offsetTop - ball.posy;
+            this.balls.push(ball);
+        }
         this.paused = false;
         this.circle(this.paused);
     }
+
+
 
 }
 
