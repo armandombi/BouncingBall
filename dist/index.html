@@ -7,7 +7,19 @@
 <body>
     <script src="bundle.js"></script>
     <canvas id="myCanvas"></canvas>
-    
+    <div class="panel">
+        <div class="panel-heading">Bouncing Balls</div>
+        <div class="panel-body">
+            <div class="input-group">
+                <!--span class="input-group-addon" id="basic-addon1">Gravity</span-->
+                <input type="text" class="form-control" id="gravity" placeholder="Set the desired gravity default = 0.2" aria-describedby="basic-addon">
+                <input type="text" class="form-control" id="radius" placeholder="Set the desired ball size default = 5" aria-describedby="basic-addon">
+                <input type="text" class="form-control" id="damping" placeholder="Set the desired damping default = 0.9" aria-describedby="basic-addon">
+                <input type="text" class="form-control" id="traction" placeholder="Set the desired traction default = 0.8" aria-describedby="basic-addon">
+            </div>
+        </div>
+    </div>
+
 </body>
 
 </html>

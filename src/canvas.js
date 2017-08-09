@@ -1,12 +1,12 @@
 import Ball from './ball.js';
 import Physics from './physics.js';
+import Utility from './util.js';
 
 class Canvas {
     constructor(canvasElement, balls) {
         this.canvasElement = canvasElement;
         this.context = canvasElement.getContext('2d');
         this.initializeEventListeners();
-        this.gravity = 0.2;
         this.paused = false;
         this.balls = [];
         this.flag = false;
@@ -24,58 +24,15 @@ class Canvas {
         this.canvasElement.height = window.innerHeight;
     }
 
-    circle() {
+    animation() {
         this.context.clearRect(0, 0, this.canvasElement.width, this.canvasElement.height);
         this.balls.unshift(this.balls.shift().checkCollision(this.balls));
         for (var i = 0; i < this.balls.length; i++) {
-            var ball = this.balls[i];
-            if (ball.posx + ball.radius >= this.canvasElement.width) {
-                ball.velx = -ball.velx * ball.damping;
-                ball.posx = this.canvasElement.width - ball.radius;
-            } else if (ball.posx - ball.radius <= 0) {
-                ball.velx = -ball.velx * ball.damping;
-                ball.posx = ball.radius;
-            }
-            if (ball.posy + ball.radius >= this.canvasElement.height) {
-                ball.vely = -ball.vely * ball.damping;
-                ball.posy = this.canvasElement.height - ball.radius;
-
-                ball.velx *= ball.traction;
-            } else if (ball.posy - ball.radius <= 0) {
-                ball.vely = -ball.vely * ball.damping;
-                ball.posy = ball.radius;
-            }
-
-            ball.vely += this.gravity;
-
-            ball.posx += ball.velx;
-            ball.posy += ball.vely;
-
-            this.context.beginPath();
-
-            this.context.fillStyle = this.getRandomColor();
-            this.context.arc(ball.posx, ball.posy, ball.radius, 0, 2 * Math.PI, false);
-            this.context.fill();
+            Physics.simulateMovement(this.balls[i],this.canvasElement);
+            this.balls[i].draw(this.context);
         }
         if (!this.paused)
-            requestAnimationFrame(this.circle.bind(this));
-
-    }
-
-    getRandomColor() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
-
-    getCurrentPosition(e) {
-        return {
-            x: e.pageX - this.canvasElement.offsetLeft,
-            y: e.pageY - this.canvasElement.offsetTop
-        }
+            requestAnimationFrame(this.animation.bind(this));
     }
 
     handleMouseMove(e) {
@@ -84,10 +41,9 @@ class Canvas {
 
     handleMouseDown(e) {
         this.flag = false;
-        var pos = this.getCurrentPosition(e);
-        var ball = new Ball(pos.x, pos.y);
-
-        ball.velx = ball.vely = 0;
+        const pos = Utility.getCurrentPosition(e, this.canvasElement);
+        const vel = Physics.getRandomVel(-50,50);
+        let ball = new Ball(pos.x, pos.y,vel.vx,vel.vy,Utility.getSetting("gravity",0.2),Utility.getSetting("radius",5),Utility.getSetting("damping",0.9),Utility.getSetting("traction",0.8));
         this.balls.push(ball);
         this.paused = true;
     }
@@ -100,7 +56,7 @@ class Canvas {
             this.balls.push(ball);
         }
         this.paused = false;
-        this.circle(this.paused);
+        this.animation(this.paused);
     }
 
 
