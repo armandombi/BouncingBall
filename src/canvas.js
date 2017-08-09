@@ -9,6 +9,7 @@ class Canvas {
         this.gravity = 0.2;
         this.paused = false;
         this.balls = [];
+        this.flag = false;
     }
 
     initializeEventListeners() {
@@ -78,23 +79,21 @@ class Canvas {
     }
 
     handleMouseMove(e) {
-        this.flag = 1;
+        this.flag = true;
     }
 
     handleMouseDown(e) {
-        this.flag = 0;
+        this.flag = false;
         var pos = this.getCurrentPosition(e);
         var ball = new Ball(pos.x, pos.y);
 
-        //this.posx = e.pageX - this.canvasElement.offsetLeft;
-        //this.posy = e.pageY - this.canvasElement.offsetTop;
         ball.velx = ball.vely = 0;
         this.balls.push(ball);
         this.paused = true;
     }
 
     handleMouseUp(e) {
-        if (this.flag == 1) {
+        if (this.flag) {
             var ball = this.balls.pop();
             ball.velx = e.pageX - this.canvasElement.offsetLeft - ball.posx;
             ball.vely = e.pageY - this.canvasElement.offsetTop - ball.posy;
