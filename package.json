@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "build": "webpack",
-    "start": "node_modules/.bin/webpack-dev-server --open=true"
+    "start": "node_modules/.bin/webpack-dev-server --open"
   },
   "keywords": [
     "javascript",
@@ -25,6 +25,7 @@
     "babel-preset-es2015": "^6.24.1",
     "css-loader": "^0.28.4",
     "jest": "^20.0.4",
+    "jsdoc": "^3.5.4",
     "regenerator-runtime": "^0.10.5",
     "source-map-loader": "^0.2.1",
     "style-loader": "^0.18.2",

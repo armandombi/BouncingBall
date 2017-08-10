@@ -1,10 +1,10 @@
 import Utility from '../util.js';
 
-test('test random color', () => {
+test('test a valid color is generated', () => {
     expect(Utility.getRandomColor()).toMatch(/^#[0-9A-F]{6}$/);
 });
 
-test('determine current position', () => {
+test('determine current position on canvas', () => {
     var event = { pageX: 10, pageY: 50 }
     var canvas = { offsetLeft: 5, offsetTop: 10 }
     expect(Utility.getCurrentPosition(event, canvas)).toMatchObject({ x: 5, y: 40 });

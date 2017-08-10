@@ -13,10 +13,16 @@ class Ball {
         this.traction = trac;
     }
 
+   /**
+   * Runs the collision of one ball with and array of balls 
+   *
+   * @param {Array} balls - The array containing the balls.
+   * @return {Ball} the ball being checked for collisions.
+   */
     checkCollision(balls) {
-        for (var i = 0; i < balls.length; i++) {
-            var ball = balls[i];
-            if (Physics.isCollision(this,ball)) {
+        for (let i = 0; i < balls.length; i++) {
+            let ball = balls[i];
+            if (Physics.isCollision(this, ball)) {
                 Physics.simulateCollision(this, ball);
             }
         }
@@ -27,7 +33,11 @@ class Ball {
             return this;
         }
     }
-
+    /**
+   * Function to draw the ball in the current context 
+   *
+   * @param {Object} context - The current canvas context.
+   */
     draw(context) {
         context.beginPath();
         context.fillStyle = Utility.getRandomColor();
