@@ -1,6 +1,10 @@
 ## Bouncing Ball
 
-This project contains the impplementation of the bouncing ball coding challenge, requiring to generate a ball at a random direction each time the user clicks on the screen(canvas). Whenever the ball reaches the ground it should bounce back untill it fully stops.   
+This project contains the implementation of the bouncing ball coding challenge, requiring to generate a ball at a random direction each time the user clicks on the screen (canvas). Whenever the ball reaches the ground it should bounce back untill it fully stops.
+
+In addition to initial requirements i have also implemented ball collision detection and simulation of reaction to the collision. The bouncing factor has also been aded to all the limiting areas of the screen and physics effects such as gravity, tractiong and damping have also been included into the movement of the balls and the collision simulation.
+
+I should warn you that the balls are in constant state of color change so BE PREPARED FOR THE RAINBOW BALL FLOW. Also resizing the screen with multiple balls bouncing is quite fun to watch. 
 
 ## Motivation
 
@@ -25,7 +29,7 @@ To run the project tests type `npm test` on the console where the project reside
 
 ## License
 
-This project is licensed under the MIT
+This project is licensed under the MIT license.
 
 ## Author
 
